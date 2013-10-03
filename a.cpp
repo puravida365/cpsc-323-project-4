@@ -4,85 +4,109 @@
 
 using namespace std;  
 
-class INTOPOST{
+class IN2POSTFIX{
 	private:
-		stack <char> s;
-		char infix[100];
+		stack <char> expression;
+		string input;
+		char infix[256];
 		string postfix;
 		char answer;
-		char *p;
+		char *position;
 		bool loop;
+		int n;
 	
 	public:
-		INTOPOST(){ postfix = " "; p = infix;}
+		IN2POSTFIX(){ 
+			//postfix = " "; 
+			position = infix;
+		}
 		void getData(){
 			cout << "Enter an infix expression with $ at the end: ";
-			cin.getline(infix,100);
+			cin >> input;
+			n = input.length();
+			for(int i = 0; i < n; ++i){
+				infix[i] = input[i];
+			}
+			
+			//cin.getline(infix,256);
 		}
 		void processData(){
-			while(*p != '$'){
-			if( (isalpha(*p)) && (*p != '(') && (*p!= ')')){
-				postfix+=*p;
+			while(*position != '$'){
+			if( (isalpha(*position)) && (*position != '(') && (*position!= ')')){
+				postfix += *position;
 			}
-			else if((*p == '+')||(*p == '-')||(*p == '*')||(*p == '/')){
-				while(!s.empty() && s.top()!='(' && (s.top()==*p)){
-					postfix+=s.top();
-					s.pop();
+			else if((*position == '+')||(*position == '-')||(*position == '*')||(*position == '/')){
+				while(!expression.empty() && expression.top()!='(' && (expression.top() == *position)){
+					postfix += expression.top();
+					expression.pop();
 				}
-				s.push(*p);
+				expression.push(*position);
 			}
-			else if(*p == '('){
-				s.push(*p);
+			else if(*position == '('){
+				expression.push(*position);
 			}
-			else if(*p == ')'){
-				while(!s.empty()){
-					if(s.top()=='('){
-						s.pop();
+			else if(*position == ')'){
+				while(!expression.empty()){
+					if(expression.top()=='('){
+						expression.pop();
 						break;
 					}
-					postfix += s.top();
-					s.pop();
+					postfix += expression.top();
+					expression.pop();
 				}
 			}
-			++p;
+			++position;
 			}
-			while(!s.empty()){
-				postfix += s.top();
-				s.pop();
+			while(!expression.empty()){
+				postfix += expression.top();
+				expression.pop();
 			}
 		}
 		bool runAgain(){
 			cout << "Continue(y/n)? ";
 			cin >> answer;
-			cout << endl << endl;
+			cout << endl;
 			answer = toupper(answer);
 			if(answer == 'Y'){
-				return true;
+				loop = false;
 			}
 			else{
-				return false;
+				loop = true;
 			}
+			return loop;
 		}
 		void printResults(){
 			cout << "The postfix form is: " << postfix << endl << endl;
+			//postfix.clear();
 		}
+		~IN2POSTFIX(){}
 };
 
 int main()
 {
-	bool answer = true;
-	INTOPOST A;
+	bool answer = false;
+	IN2POSTFIX A;
 	
-	do{
+	while(answer == false){
 		A.getData();
 		A.processData();
 		A.printResults();
     	answer = A.runAgain();
-	}while(answer == true);
+	}
 	
 	return 0;
 }
 
+/*
+Enter an infix expression with $ at the end: c*(a-b))-d*a$
+The postfix form is: cab-*da*-
 
+Continue(y/n)? y
+
+Enter an infix expression with $ at the end: a*(b+c*(a-b))+d$
+The postfix form is: cab-*da*-d+
+
+Continue(y/n)? n
+*/
 
 
