@@ -1,6 +1,14 @@
+// =======================================================================================
+// Computer Science 323 - Section 5
+// Assignment No 4
+// Date: 10/03/13
+// Programmers: Samar Alqayidi, Harry Mora
+// Description: Program reads an infix expression and converts it to postfix    
+// =======================================================================================
+
 #include <iostream>  
+#include <string> 
 #include <stack>  
-#include <string>  
 
 using namespace std;  
 
@@ -17,18 +25,17 @@ class IN2POSTFIX{
 	
 	public:
 		IN2POSTFIX(){ 
-			//postfix = " "; 
+			// set pointer to beginning of array
 			position = infix;
 		}
 		void getData(){
 			cout << "Enter an infix expression with $ at the end: ";
 			cin >> input;
 			n = input.length();
+			// convert input from string to c-string
 			for(int i = 0; i < n; ++i){
 				infix[i] = input[i];
 			}
-			
-			//cin.getline(infix,256);
 		}
 		void processData(){
 			while(*position != '$'){
